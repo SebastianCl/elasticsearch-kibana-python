@@ -31,3 +31,30 @@ for libro in libros:
     es.index(index=index_name, id=libro["id"], document=libro)
 
 print("✅ Libros indexados correctamente")
+
+
+# 🔍 Función para buscar libros por título
+def buscar_por_titulo(texto):
+    print(f"\n🔍 Buscando libros que contengan: '{texto}'")
+    respuesta = es.search(
+        index=index_name,
+        query={
+            "match": {
+                "titulo": texto
+            }
+        }
+    )
+
+    hits = respuesta["hits"]["hits"]
+    if not hits:
+        print("❌ No se encontraron resultados.")
+        return
+
+    for hit in hits:
+        fuente = hit["_source"]
+        print(f"📘 {fuente['titulo']} — {fuente['autor']}")
+
+
+# Ejemplo de búsqueda
+buscar_por_titulo("El mundo") # Para mostrar búsqueda con resultados
+buscar_por_titulo("Manzana") # Para mostrar búsqueda sin resultados
